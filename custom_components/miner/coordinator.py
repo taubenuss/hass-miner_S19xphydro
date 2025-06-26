@@ -47,6 +47,7 @@ DEFAULT_DATA = {
     "miner_sensors": {
         "hashrate": 0,
         "ideal_hashrate": 0,
+        "active_preset_name": None,
         "temperature": 0,
         "power_limit": 0,
         "miner_consumption": 0,
@@ -129,10 +130,9 @@ class MinerCoordinator(DataUpdateCoordinator):
 
             raise UpdateFailed("Miner Offline (consecutive failure)")
 
-        # At this point, miner is valid
         _LOGGER.debug(f"Found miner: {self.miner}")
 
-        # Fix für S19 XP Hydro
+        # Fix für S19 XP Hydro – fehlende Hashboard-Angabe
         self.miner.expected_hashboards = 3
 
         try:
@@ -171,7 +171,6 @@ class MinerCoordinator(DataUpdateCoordinator):
 
         _LOGGER.debug(f"Got data: {miner_data}")
 
-        # Success: reset the failure count
         self._failure_count = 0
 
         try:
@@ -195,7 +194,7 @@ class MinerCoordinator(DataUpdateCoordinator):
             "miner_sensors": {
                 "hashrate": hashrate,
                 "ideal_hashrate": expected_hashrate,
-                "active_preset_name": miner_data.config.mining_mode.active_preset.name,
+                "active_preset_name": getattr(getattr(miner_data.config.mining_mode, "active_preset", None), "name", None),
                 "temperature": miner_data.temperature_avg,
                 "power_limit": miner_data.wattage_limit,
                 "miner_consumption": miner_data.wattage,
