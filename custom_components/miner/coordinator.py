@@ -133,6 +133,9 @@ class MinerCoordinator(DataUpdateCoordinator):
         # At this point, miner is valid
         _LOGGER.debug(f"Found miner: {self.miner}")
 
+        # Fix für S19 XP Hydro
+        self.miner.expected_hashboards = 3
+
         try:
             miner_data = await self.miner.get_data(
                 include=[
