@@ -47,7 +47,6 @@ DEFAULT_DATA = {
     "miner_sensors": {
         "hashrate": 0,
         "ideal_hashrate": 0,
-       "active_preset_name": getattr(getattr(miner_data.config.mining_mode, "active_preset", None), "name", None),
         "temperature": 0,
         "power_limit": 0,
         "miner_consumption": 0,
